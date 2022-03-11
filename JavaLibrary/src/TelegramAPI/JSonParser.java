@@ -22,10 +22,10 @@ public class JSONParser {
 
         JSONArray arrayResult = obj.getJSONArray("result"); // notice that `"posts": [...]`
         for (int i = 0; i < arrayResult.length(); i++) {
-            JSONObject message = new JSONObject(arrayResult.getJSONObject(i));
-            System.out.println(message);
-            /*JSONObject message = result.getJSONObject("message");
-            System.out.println(messaggio);*/
+            JSONObject arrayObj = arrayResult.getJSONObject(i);
+            JSONObject message = arrayObj.getJSONObject("message");
+            String text = message.getString("text");
+            System.out.println(text);
         }
     }
 }

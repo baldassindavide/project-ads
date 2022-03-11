@@ -20,10 +20,12 @@ public class JSONParser {
         /*String messageText = obj.getString("text");
         System.out.println(messageText);*/
 
-        JSONArray result = obj.getJSONArray("result"); // notice that `"posts": [...]`
-        for (int i = 0; i < result.length(); i++) {
-            JSONObject message = result.getJSONObject("message");
-            System.out.println(messaggio);
+        JSONArray arrayResult = obj.getJSONArray("result"); // notice that `"posts": [...]`
+        for (int i = 0; i < arrayResult.length(); i++) {
+            JSONObject message = new JSONObject(arrayResult.getJSONObject(i));
+            System.out.println(message);
+            /*JSONObject message = result.getJSONObject("message");
+            System.out.println(messaggio);*/
         }
     }
 }

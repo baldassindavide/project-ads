@@ -11,21 +11,24 @@ import org.json.*;
  *
  * @author baldassin_davide
  */
-public class JSONParser {
+public class JSonParser {
 
-    public void parseFromJSON(String jsonText) {
+    public String parseFromJSON(String jsonText) {
 
         //String jsonString = "{nome:'mario',messaggi:['ciao','mondo']}"; //assign your JSON String here
         JSONObject obj = new JSONObject(jsonText);
         /*String messageText = obj.getString("text");
         System.out.println(messageText);*/
 
-        JSONArray arrayResult = obj.getJSONArray("result"); // notice that `"posts": [...]`
-        for (int i = 0; i < arrayResult.length(); i++) {
-            JSONObject arrayObj = arrayResult.getJSONObject(i);
-            JSONObject message = arrayObj.getJSONObject("message");
-            String text = message.getString("text");
-            System.out.println(text);
-        }
+        JSONArray arrayResult = obj.getJSONArray("result"); // notice that `"result": [...]`
+        //for (int i = 0; i < arrayResult.length(); i++) {
+        JSONObject arrayObj = arrayResult.getJSONObject(arrayResult.length() - 1);
+        JSONObject message = arrayObj.getJSONObject("message");
+        String text = message.getString("text");
+        
+        JSONObject chat = message.getJSONObject("chat");
+        int chatID = chat.getInt("id");
+        //System.out.println(text);        
+        return text + "," + chatID;
     }
 }

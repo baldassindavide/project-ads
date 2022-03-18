@@ -5,6 +5,7 @@
  */
 package jappads;
 
+import TelegramAPI.TelegramAPI;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -119,6 +120,8 @@ public class JFrameMainWindow extends javax.swing.JFrame {
 
     private void bttSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttSendActionPerformed
         OpenStreetMap OSM = new OpenStreetMap();
+        TelegramAPI tAPI = new TelegramAPI("https://api.telegram.org/bot5283513985:AAH1BGdQ2jeiQbxty_65JltrNSFFr-mvsXg/");
+        
         String inTown = txtTown.getText(); // get attributes from text boxes
         int inRange = Integer.parseInt(txtRange.getText());
 
@@ -130,10 +133,12 @@ public class JFrameMainWindow extends javax.swing.JFrame {
             String line = "", chatID = "";
             Double lon = 0.0, lat = 0.0;
             try (Scanner scanner = new Scanner(new File("data.csv"));) {
-                while ((line = scanner.nextLine()) != null) {
+                while ((line = scanner.nextLine()) != "") {
                     fields = line.split(";");
+                    
+                    // fields[0] -> chatID , fields[1] = townName
                     if(fields[1].equals(t.getName()))
-                        sendMessage();
+                        tAPI.sendMessage(Integer.parseInt(fields[0]),txtAreaMain.getText()); // send message through telegram API
                 }
             }
 

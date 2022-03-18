@@ -25,15 +25,17 @@ public class JAppAds {
 
     /**
      * @param args the command line arguments
+     * 
      */
+    
+   
+    
     public static void main(String[] args) throws IOException, ParserConfigurationException, SAXException {
 
         JSonParser t = new JSonParser();
         OpenStreetMap OSM = new OpenStreetMap();
-        TelegramAPI = new TelegramAPI();
-        URL url = new URL("https://api.telegram.org/bot5283513985:AAH1BGdQ2jeiQbxty_65JltrNSFFr-mvsXg/getUpdates");
-        
-        String jsonText = getDataFromTelegramURL(url); // gets all the messages
+        TelegramAPI tAPI = new TelegramAPI("https://api.telegram.org/bot5283513985:AAH1BGdQ2jeiQbxty_65JltrNSFFr-mvsXg/");
+        String jsonText = tAPI.getUpdates(); // gets all the messages
         
         String[] arrayMessage = t.parseFromJSON(jsonText).split(",");
         String message = arrayMessage[0]; // gets the last message and the chat id of the message

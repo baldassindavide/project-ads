@@ -8,23 +8,27 @@ package TelegramAPI;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 
 /**
  *
  * @author balda
  */
 public class TelegramAPI {
-    
+
     String url;
-    public TelegramAPI(String url){
+
+    public TelegramAPI(String url) {
         this.url = url;
     }
-    
-    public String getDataFromTelegramURL() throws IOException{ // get updates
+
+    public String getUpdates() throws IOException { // get updates
         url += "getUpdates";
         URL finalUrl = new URL(url);
-        
+
         BufferedReader in;
         Boolean found = true;
         String singleLine, jsonText = "";
@@ -35,7 +39,14 @@ public class TelegramAPI {
                 jsonText += singleLine;
             }
         } while (singleLine != null);
-        
+
         return jsonText;
+    }
+
+    public void sendMessage(int chatID, String text) throws UnsupportedEncodingException, MalformedURLException, IOException {
+        String textToSend = URLEncoder.encode(text, "UTF-8"); // url encoder
+        url += "sendMessage?chat_id=" + Integer.toString(chatID) + "&text=" + textToSend; // create the API URL
+        URL finalUrl = new URL(url);
+        finalUrl.openStream();
     }
 }

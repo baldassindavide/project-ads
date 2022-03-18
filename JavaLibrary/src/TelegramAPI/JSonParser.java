@@ -12,7 +12,7 @@ import org.json.*;
  * @author baldassin_davide
  */
 public class JSonParser {
-
+    
     public String parseFromJSON(String jsonText) {
 
         //String jsonString = "{nome:'mario',messaggi:['ciao','mondo']}"; //assign your JSON String here

@@ -30,9 +30,29 @@ public class JAppAds {
 
         JSonParser t = new JSonParser();
         OpenStreetMap OSM = new OpenStreetMap();
-
+        TelegramAPI = new TelegramAPI();
         URL url = new URL("https://api.telegram.org/bot5283513985:AAH1BGdQ2jeiQbxty_65JltrNSFFr-mvsXg/getUpdates");
-
+        
+        String jsonText = getDataFromTelegramURL(url); // gets all the messages
+        
+        String[] arrayMessage = t.parseFromJSON(jsonText).split(",");
+        String message = arrayMessage[0]; // gets the last message and the chat id of the message
+        String chatID = arrayMessage[1];
+        
+        // sends query to OpenStreetMap
+        if (message.contains("/paese ")) {
+            String[] arrayPaese = message.split(" ", 2);
+            String paese = URLEncoder.encode(arrayPaese[1], "UTF-8");
+            JTown town = OSM.getPaese(paese).get(0);
+            
+            String CSVText = chatID + ";" + town.getName() + ";" + Double.toString(town.getLat()) + ";" + Double.toString(town.getLon()) + "\r\n";
+            writeOnFile("data.csv", CSVText); // writes on CSV file
+            
+            
+        }
+    }
+    
+    public static String getDataFromTelegramURL(URL url) throws IOException{
         BufferedReader in;
         Boolean found = true;
         String singleLine, jsonText = "";
@@ -43,25 +63,13 @@ public class JAppAds {
                 jsonText += singleLine;
             }
         } while (singleLine != null);
-
-        String[] arrayMessage = t.parseFromJSON(jsonText).split(",");
-        String message = arrayMessage[0];
-        String chatID = arrayMessage[1];
-        // System.out.println(t.parseFromJSON(jsonText));
-        if (message.contains("/paese ")) {
-            String[] arrayPaese = message.split(" ", 2);
-            String paese = URLEncoder.encode(arrayPaese[1], "UTF-8");
-            URL urlOSM = new URL("https://nominatim.openstreetmap.org/search?q=" + paese + "&format=xml&addressdetails=1");
-
-            List listTown = OSM.getPaese(urlOSM);
-            JTown town = OSM.getPaese(urlOSM).get(0);
-
-            //System.out.println(town.toString());
-            String CSVString = chatID + ";" + town.getName() + ";" + Double.toString(town.getLat()) + ";" + Double.toString(town.getLon()) + "\r\n";
-            FileWriter myWriter = new FileWriter("data.csv", true);
-            myWriter.write(CSVString);
-            myWriter.close();
-
-        }
+        
+        return jsonText;
+    }
+    
+    public static void writeOnFile(String file, String text) throws IOException {
+        FileWriter myWriter = new FileWriter(file, true);
+        myWriter.write(text);
+        myWriter.close();
     }
 }

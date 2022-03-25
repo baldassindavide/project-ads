@@ -31,11 +31,30 @@ public class OpenStreetMap {
 
     }
 
+    public double distanza(double lat1, double lon1, double lat2, double lon2) {
+        var earthRadiusKm = 6371;
+
+        var dLat = degreesToRadians(lat2 - lat1);
+        var dLon = degreesToRadians(lon2 - lon1);
+
+        lat1 = degreesToRadians(lat1);
+        lat2 = degreesToRadians(lat2);
+
+        var a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+                + Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return earthRadiusKm * c;
+    }
+
+    public double degreesToRadians(double degrees) {
+        return degrees * Math.PI / 180;
+    }
+
     public List<JTown> getPaese(String paese) throws IOException, ParserConfigurationException, SAXException {
-        
+
         URL urlOSM = new URL("https://nominatim.openstreetmap.org/search?q=" + paese + "&format=xml&addressdetails=1"); // gets XAML from URL
         BufferedReader in = new BufferedReader(new InputStreamReader(urlOSM.openStream()));
-        
+
         String singleLineOSM, XAMLtext = "";
         do {
             singleLineOSM = in.readLine();

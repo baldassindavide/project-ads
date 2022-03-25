@@ -26,7 +26,7 @@ public class TelegramAPI {
     }
 
     public String getUpdates() throws IOException { // get updates
-        url += "getUpdates";
+        url = "https://nominatim.openstreetmap.org/search?q=getUpdates";
         URL finalUrl = new URL(url);
 
         BufferedReader in;
@@ -45,7 +45,7 @@ public class TelegramAPI {
 
     public void sendMessage(int chatID, String text) throws UnsupportedEncodingException, MalformedURLException, IOException {
         String textToSend = URLEncoder.encode(text, "UTF-8"); // url encoder
-        url += "sendMessage?chat_id=" + Integer.toString(chatID) + "&text=" + textToSend; // create the API URL
+        url = "https://nominatim.openstreetmap.org/search?q=sendMessage?chat_id=" + Integer.toString(chatID) + "&text=" + textToSend; // create the API URL
         URL finalUrl = new URL(url);
         finalUrl.openStream();
     }

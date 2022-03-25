@@ -133,11 +133,13 @@ public class JFrameMainWindow extends javax.swing.JFrame {
             String line = "", chatID = "";
             Double lon = 0.0, lat = 0.0;
             try (Scanner scanner = new Scanner(new File("data.csv"));) {
-                while ((line = scanner.nextLine()) != "") {
+                while (scanner.hasNextLine()) {
+                    line = scanner.nextLine();
                     fields = line.split(";");
-                    
+                    lat = Double.parseDouble(fields[2]); //get from csv
+                    lon = Double.parseDouble(fields[3]);
                     // fields[0] -> chatID , fields[1] = townName
-                    if(fields[1].equals(t.getName()))
+                    if(OSM.distanza(t.getLat(), t.getLon(), lat, lon) <= Integer.parseInt(txtRange.getText()))
                         tAPI.sendMessage(Integer.parseInt(fields[0]),txtAreaMain.getText()); // send message through telegram API
                 }
             }
@@ -180,6 +182,9 @@ public class JFrameMainWindow extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
+        ThreadGetUpdates thread = new ThreadGetUpdates();
+        thread.run();
+        
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new JFrameMainWindow().setVisible(true);

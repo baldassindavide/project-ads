@@ -183,7 +183,7 @@ public class JFrameMainWindow extends javax.swing.JFrame {
 
         /* Create and display the form */
         ThreadGetUpdates thread = new ThreadGetUpdates();
-        thread.run();
+        thread.start();
         
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {

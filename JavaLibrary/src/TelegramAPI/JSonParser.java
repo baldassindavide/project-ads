@@ -25,10 +25,11 @@ public class JSonParser {
         JSONObject arrayObj = arrayResult.getJSONObject(arrayResult.length() - 1);
         JSONObject message = arrayObj.getJSONObject("message");
         String text = message.getString("text");
+        int messageID = message.getInt("message_id");
         
         JSONObject chat = message.getJSONObject("chat");
         int chatID = chat.getInt("id");
         //System.out.println(text);        
-        return text + "," + chatID;
+        return text + "," + chatID + "," + messageID;
     }
 }

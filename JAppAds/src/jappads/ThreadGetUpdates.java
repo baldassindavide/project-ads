@@ -57,6 +57,7 @@ public class ThreadGetUpdates extends Thread {
         JSonParser t = new JSonParser();
         OpenStreetMap OSM = new OpenStreetMap();
         TelegramAPI tAPI = new TelegramAPI("https://api.telegram.org/bot5283513985:AAH1BGdQ2jeiQbxty_65JltrNSFFr-mvsXg/");
+        String oldMessageID = "";
         while (true) {
             try {
 
@@ -65,15 +66,20 @@ public class ThreadGetUpdates extends Thread {
                 String[] arrayMessage = t.parseFromJSON(jsonText).split(",");
                 String message = arrayMessage[0]; // gets the last message and the chat id of the message
                 String chatID = arrayMessage[1];
+                String newMessageID = arrayMessage[2];
 
-                // sends query to OpenStreetMap
-                if (message.contains("/paese ")) {
-                    String[] arrayPaese = message.split(" ", 2);
-                    String paese = URLEncoder.encode(arrayPaese[1], "UTF-8");
-                    JTown town = OSM.getPaese(paese).get(0);
-                    String CSVText = chatID + ";" + town.getName() + ";" + Double.toString(town.getLat()) + ";" + Double.toString(town.getLon()) + "\n";
-                    writeOnFile("data.csv", CSVText); // writes on CSV file   
+                if (!newMessageID.equals(oldMessageID)) {
+                    if (message.contains("/paese ")) {
+                        String[] arrayPaese = message.split(" ", 2);
+                        String paese = URLEncoder.encode(arrayPaese[1], "UTF-8");
+                        JTown town = OSM.getPaese(paese).get(0);
+                        String CSVText = chatID + ";" + town.getName() + ";" + Double.toString(town.getLat()) + ";" + Double.toString(town.getLon()) + "\n";
+                        writeOnFile("data.csv", CSVText); // writes on CSV file   
+                        oldMessageID = newMessageID;
+
+                    }
                 }
+                // sends query to OpenStreetMap
             } catch (IOException ex) {
                 Logger.getLogger(ThreadGetUpdates.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ParserConfigurationException ex) {
